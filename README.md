@@ -2,6 +2,8 @@
 
 A minimal terminal command that displays the contents of files in the current directory while keeping folders and binary files visually distinct.
 
+!(catall)[assets/screenshot.png]
+
 ## Features
 
 - Displays folders without entering them
