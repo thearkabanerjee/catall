@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+set -uo pipefail
+
+# Colors
+blue='\033[34m'
+cyan='\033[36m'
+red='\033[31m'
+reset='\033[0m'
+
+printf '\n'
+
+show_hidden=false
+
+if [[ "${1:-}" == "--hidden" ]]; then
+  show_hidden=true
+elif [[ $# -gt 0 ]]; then
+  echo "Usage: catall [--hidden]"
+  exit 1
+fi
+
+# Find entries in the current directory.
+if $show_hidden; then
+  entries=(.* *)
+else
+  entries=(*)
+fi
+
+first=true
+
+for entry in "${entries[@]}"; do
+  # Skip . and ..
+  [[ "$entry" == "." || "$entry" == ".." ]] && continue
+
+  # Don't show hidden files unless --hidden was specified.
+  if ! $show_hidden && [[ "$entry" == .* ]]; then
+    continue
+  fi
+
+  # Avoid duplicate entries when glob patterns overlap.
+  # Also skip if the entry doesn't exist.
+  [[ -e "$entry" || -L "$entry" ]] || continue
+
+  # Two newlines between entries.
+  if ! $first; then
+    printf '\n\n'
+  fi
+  first=false
+
+  # Directory
+  if [[ -d "$entry" ]]; then
+    printf "${blue}📁 %s/${reset}" "$entry"
+    continue
+  fi
+
+  # Determine whether the file is text or binary.
+  if file --brief --mime "$entry" 2>/dev/null | grep -q '^text/'; then
+    printf "${cyan}📄 %s${reset}\n" "$entry"
+    printf '%s' "$(cat -- "$entry")"
+    # cat -- "$entry"
+  else
+    printf "${red}⚠︎ %s${reset}" "$entry"
+  fi
+done
+
+printf '\n\n'
