@@ -60,4 +60,6 @@ catall --hidden
 ```
 
 ### License
-MIT License
+
+![MIT LICENSE](LICENSE)
+
