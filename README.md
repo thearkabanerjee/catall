@@ -61,5 +61,5 @@ catall --hidden
 
 ### License
 
-![MIT LICENSE](LICENSE)
+!(LICENSE)
 
