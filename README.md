@@ -48,8 +48,7 @@ catall
 ### Requirements
 - macOS or Linux
 - Bash
-- file
-No additional packages or dependencies are required.
+- No additional packages or dependencies are required.
 
 ### Design
 catall is intentionally simple.
