@@ -1,3 +1,10 @@
 features i am thinking of
-[ ] Print files and folders in the current directory. (catall)
-[ ] catall --hidden
+[*] Print files and folders in the current directory. (catall)
+[*] catall --hidden
+
+
+
+new changes added:
+
+[*] add support for pdfs
+[*] add support for videos and images
