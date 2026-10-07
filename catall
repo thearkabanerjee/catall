@@ -6,6 +6,7 @@ set -uo pipefail
 blue='\033[34m'
 cyan='\033[36m'
 red='\033[31m'
+yellow='\033[33m'
 reset='\033[0m'
 
 printf '\n'
@@ -53,14 +54,36 @@ for entry in "${entries[@]}"; do
     continue
   fi
 
-  # Determine whether the file is text or binary.
-  if file --brief --mime "$entry" 2>/dev/null | grep -q '^text/'; then
-    printf "${cyan}📄 %s${reset}\n" "$entry"
-    printf '%s' "$(cat -- "$entry")"
-    # cat -- "$entry"
-  else
-    printf "${red}⚠︎ %s${reset}" "$entry"
+  # Determine MIME type
+  mime=$(file --brief --mime-type -- "$entry" 2>/dev/null)
+
+  # PDF
+  if [[ "$mime" == "application/pdf" ]]; then
+    printf "${cyan}📄 %s${reset}" "$entry"
+    continue
   fi
+
+  # Images
+  if [[ "$mime" == image/* ]]; then
+    printf "${yellow}🅾  %s${reset}" "$entry"
+    continue
+  fi
+
+  # Videos
+  if [[ "$mime" == video/* ]]; then
+    printf "${yellow}🅾  %s${reset}" "$entry"
+    continue
+  fi
+
+  # Text files
+  if [[ "$mime" == text/* ]]; then
+    printf "${cyan}📄 %s${reset}\n" "$entry"
+    cat -- "$entry"
+    continue
+  fi
+
+  # Everything else
+  printf "${red}⚠︎ %s${reset}" "$entry"
 done
 
 printf '\n\n'
